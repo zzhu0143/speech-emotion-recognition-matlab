@@ -66,6 +66,10 @@ venv/
 !results/README.md
 !models/README.md
 
+# Allow project report PDF
+!Project_*.pdf
+!*Report*.pdf
+
 # Ignore Chinese named files
 *中文*.md
 下一步指南.md

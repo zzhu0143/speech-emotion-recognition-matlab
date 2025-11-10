@@ -427,8 +427,9 @@ Common misclassifications:
 
 ### Complete Project Documentation
 
-- **[Research Report](FINAL_RESEARCH_REPORT.md)** - Full academic report with literature review, methodology, results, and discussion
-- **[Quick Start Guide](QUICK_START_MATLAB.md)** - Condensed setup and usage instructions
+- **[Research Report (PDF)](Project_Zhehaozhu.pdf)** - Full academic report with literature review, methodology, results, and discussion
+- **[Video Demo Script](VIDEO_DEMO_SCRIPT.md)** - Detailed guide for recording video demonstration
+- **[Project Summary](PROJECT_SUMMARY.md)** - Quick overview of all components and results
 - **[Project Requirements](ELEC5305_Project_Requirements.md)** - Course requirements and marking criteria
 
 ### Video Demonstration

@@ -30,7 +30,9 @@ The repository contains:
 
 ### 2. 📝 Written Research Report
 
-**Format:** Academic research paper
+**File:** [Project_Zhehaozhu.pdf](Project_Zhehaozhu.pdf)
+
+**Format:** Academic research paper (PDF)
 
 **Sections:**
 - Introduction and literature review
@@ -39,7 +41,9 @@ The repository contains:
 - Discussion and conclusion
 - References and citations
 
-**Note:** The complete research report should be uploaded separately to Canvas as per course requirements. Key technical details are documented in the README.md file in the GitHub repository.
+**Status:** ✅ Complete and included in repository
+
+**Note:** The complete research report is available in the GitHub repository and should also be uploaded to Canvas as per course requirements.
 
 ### 3. 📹 Video Demonstration
 
