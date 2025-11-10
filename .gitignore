@@ -1,0 +1,74 @@
+# MATLAB
+*.asv
+*.autosave
+*.m~
+*.mex*
+*.mat
+slprj/
+*.slxc
+sccprj/
+*.mlappinstall
+*.mltbx
+
+# Data files (large datasets)
+data/RAVDESS/
+*.wav
+*.mp3
+*.flac
+
+# Generated results
+results/*.png
+results/*.jpg
+results/*.txt
+
+# Models (can be large)
+models/*.mat
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+~$*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+
+# LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.pdf
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Project specific - keep some example files
+!data/README.md
+!results/README.md
+!models/README.md
+
+# Ignore Chinese named files
+*中文*.md
+下一步指南.md
+如何解释低准确率.md
+安装AudioToolbox指南.md
+提交说明_中文.md
