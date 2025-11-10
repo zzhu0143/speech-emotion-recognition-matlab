@@ -1,564 +1,640 @@
 # Speech Emotion Recognition Using MATLAB Deep Learning
 
-基于MATLAB深度学习工具箱的语音情感识别系统
+A comprehensive speech emotion recognition system implemented using MATLAB Deep Learning Toolbox and the RAVDESS dataset.
+
+**Course:** ELEC5305 - Speech and Audio Processing
+**Institution:** The University of Sydney
+**Author:** Zhu
+**GitHub:** https://github.com/zzhu0143/speech-emotion-recognition-matlab
 
 ---
 
-## 项目概述
+## 📋 Table of Contents
 
-本项目使用MATLAB实现了完整的语音情感识别系统，包括：
-
-- **数据处理**：RAVDESS数据集加载和特征提取
-- **三个深度学习模型**：
-  1. 基线神经网络（Baseline NN）
-  2. LSTM循环神经网络
-  3. CNN-LSTM混合模型（可选）
-- **完整评估**：准确率、混淆矩阵、可视化
-- **预测功能**：对新音频文件进行情感预测
-
-**研究问题**：如何使用深度学习有效识别语音中的情感？
+- [Project Overview](#project-overview)
+- [Research Question](#research-question)
+- [System Requirements](#system-requirements)
+- [Installation Guide](#installation-guide)
+- [Quick Start](#quick-start)
+- [Project Structure](#project-structure)
+- [Model Architectures](#model-architectures)
+- [Usage Examples](#usage-examples)
+- [Expected Results](#expected-results)
+- [Documentation](#documentation)
+- [Troubleshooting](#troubleshooting)
+- [References](#references)
+- [License](#license)
 
 ---
 
-## 系统要求
+## Project Overview
 
-### MATLAB版本
-- **MATLAB R2020b或更高版本**
-- 推荐：MATLAB R2022a+（最佳兼容性）
+This project implements a complete speech emotion recognition system using MATLAB's Deep Learning Toolbox. The system processes audio signals from the RAVDESS (Ryerson Audio-Visual Database of Emotional Speech and Song) dataset to classify emotional states in human speech.
 
-### 必需工具箱
-1. **Deep Learning Toolbox** （深度学习工具箱）
-2. **Audio Toolbox** （音频工具箱）
-3. **Signal Processing Toolbox** （信号处理工具箱）
-4. **Statistics and Machine Learning Toolbox** （统计和机器学习工具箱）
+### Key Features
 
-### 检查工具箱
-在MATLAB命令窗口运行：
+- **Data Processing Pipeline**: Automated loading and preprocessing of RAVDESS dataset
+- **Feature Extraction**: Comprehensive audio feature extraction including:
+  - Mel-Frequency Cepstral Coefficients (MFCC)
+  - Spectral features (centroid, rolloff, flux, entropy)
+  - Temporal features (zero-crossing rate, energy)
+  - Pitch features (F0 statistics)
+- **Multiple Deep Learning Models**:
+  1. Baseline Feedforward Neural Network
+  2. LSTM (Long Short-Term Memory) Network
+  3. Optional CNN-LSTM Hybrid Model
+- **Comprehensive Evaluation**: Accuracy metrics, confusion matrices, and visualizations
+- **Prediction Functionality**: Real-time emotion prediction for new audio files
+
+### Emotion Classes
+
+The system recognizes 8 emotional states:
+- Neutral
+- Calm
+- Happy
+- Sad
+- Angry
+- Fearful
+- Disgust
+- Surprised
+
+---
+
+## Research Question
+
+**How can deep learning techniques be effectively applied to recognize emotions from speech signals?**
+
+This project investigates:
+1. The effectiveness of different neural network architectures for emotion recognition
+2. The importance of various audio features in emotion classification
+3. Comparison between feedforward and recurrent neural network approaches
+4. Performance trade-offs between model complexity and accuracy
+
+---
+
+## System Requirements
+
+### MATLAB Version
+- **Minimum**: MATLAB R2020b
+- **Recommended**: MATLAB R2022a or higher (for best compatibility)
+
+### Required Toolboxes
+1. **Deep Learning Toolbox** (essential)
+2. **Audio Toolbox** (essential)
+3. **Signal Processing Toolbox** (essential)
+4. **Statistics and Machine Learning Toolbox** (essential)
+
+### Hardware Recommendations
+- **CPU**: Multi-core processor (Intel i5 or better)
+- **RAM**: Minimum 8GB (16GB recommended)
+- **GPU**: NVIDIA GPU with CUDA support (optional, for faster training)
+- **Storage**: At least 2GB free space for dataset and models
+
+### Checking Your Installation
+
+To verify installed toolboxes, run in MATLAB:
 ```matlab
 ver
 ```
 
-### 安装缺少的工具箱
-1. 点击MATLAB主页 → **Add-Ons**
-2. 搜索并安装缺少的工具箱
+Look for the four required toolboxes in the output.
 
 ---
 
-## 快速开始
+## Installation Guide
 
-### 第1步：下载数据集
+### Step 1: Download the Dataset
 
-1. 访问：https://www.kaggle.com/datasets/uwrfkaggle/ravdess-emotional-speech-audio
-2. 下载RAVDESS数据集（约200MB）
-3. 解压到项目的 `data/RAVDESS/` 文件夹
+1. Visit the RAVDESS dataset page:
+   - **Kaggle**: https://www.kaggle.com/datasets/uwrfkaggle/ravdess-emotional-speech-audio
+   - **Official**: https://zenodo.org/record/1188976
 
-您的文件结构应该是：
+2. Download the complete dataset (~200MB)
+
+3. Extract the dataset to the project's `data/` folder
+
+### Expected Directory Structure
+
+After extraction, your directory should look like:
 ```
 speech_emotion_recognition_matlab/
 ├── data/
 │   └── RAVDESS/
 │       ├── Actor_01/
+│       │   ├── 03-01-01-01-01-01-01.wav
+│       │   ├── 03-01-01-01-01-02-01.wav
+│       │   └── ...
 │       ├── Actor_02/
+│       ├── Actor_03/
 │       └── ...
 │       └── Actor_24/
+├── models/
+├── results/
+├── main_train_all_models.m
+├── README.md
+└── ...
 ```
 
-### 第2步：打开MATLAB
+### Step 2: Install Missing Toolboxes (if needed)
 
-1. 启动MATLAB
-2. 将当前文件夹切换到项目目录：
+1. Open MATLAB
+2. Click **Home** tab → **Add-Ons** → **Get Add-Ons**
+3. Search for and install any missing toolboxes:
+   - Deep Learning Toolbox
+   - Audio Toolbox
+   - Signal Processing Toolbox
+   - Statistics and Machine Learning Toolbox
+
+### Step 3: Clone or Download This Repository
+
+**Option A: Using Git**
+```bash
+git clone https://github.com/zzhu0143/speech-emotion-recognition-matlab.git
+cd speech-emotion-recognition-matlab
+```
+
+**Option B: Download ZIP**
+1. Visit: https://github.com/zzhu0143/speech-emotion-recognition-matlab
+2. Click "Code" → "Download ZIP"
+3. Extract to your desired location
+
+---
+
+## Quick Start
+
+### Basic Training Workflow
+
+1. **Open MATLAB** and navigate to the project directory:
 ```matlab
-cd('C:\Users\朱\speech_emotion_recognition_matlab')
+cd('path/to/speech_emotion_recognition_matlab')
 ```
 
-### 第3步：运行主训练脚本
-
+2. **Run the main training script**:
 ```matlab
 main_train_all_models
 ```
 
-这将：
-- 加载RAVDESS数据集
-- 提取音频特征
-- 训练基线神经网络和LSTM模型
-- 生成混淆矩阵和性能对比图
-- 保存所有结果到 `results/` 文件夹
-- 保存训练好的模型到 `models/` 文件夹
+This will:
+- Load the RAVDESS dataset
+- Extract audio features from all speech samples
+- Train both Baseline and LSTM models
+- Generate confusion matrices and performance visualizations
+- Save trained models to `models/` directory
+- Save results and figures to `results/` directory
 
-**预计运行时间**：
-- 特征提取：10-15分钟
-- 基线模型训练：5-10分钟
-- LSTM模型训练：15-25分钟
-- **总计**：约30-50分钟
+### Expected Training Time
 
-### 第4步：测试预测
+| Task | Approximate Time |
+|------|------------------|
+| Feature Extraction | 10-15 minutes |
+| Baseline Model Training | 5-10 minutes |
+| LSTM Model Training | 15-25 minutes |
+| **Total** | **30-50 minutes** |
 
-训练完成后，测试情感预测：
-
-```matlab
-% 预测单个音频文件的情感
-[emotion, probs] = predictEmotion('path/to/audio.wav');
-
-% 使用LSTM模型预测
-[emotion, probs] = predictEmotion('path/to/audio.wav', 'models/lstm_model.mat');
-```
+*Note: Times vary based on hardware. GPU acceleration significantly reduces training time.*
 
 ---
 
-## 项目文件说明
-
-### 核心脚本
-
-| 文件 | 功能 | 说明 |
-|------|------|------|
-| `main_train_all_models.m` | 主训练脚本 | 运行完整训练流程 |
-| `extractAudioFeatures.m` | 特征提取 | 提取MFCC、频谱特征等 |
-| `loadRAVDESSData.m` | 数据加载 | 加载RAVDESS数据集 |
-| `trainBaselineModel.m` | 基线模型训练 | 训练全连接神经网络 |
-| `trainLSTMModel.m` | LSTM模型训练 | 训练循环神经网络 |
-| `predictEmotion.m` | 情感预测 | 预测新音频的情感 |
-
-### 文件夹结构
+## Project Structure
 
 ```
 speech_emotion_recognition_matlab/
 │
-├── data/                          # 数据文件夹
-│   ├── RAVDESS/                   # RAVDESS数据集（需下载）
-│   └── extracted_features.mat     # 提取的特征（自动生成）
+├── data/                          # Dataset directory
+│   ├── RAVDESS/                   # RAVDESS audio files (download separately)
+│   └── extracted_features.mat     # Cached extracted features (auto-generated)
 │
-├── models/                        # 训练好的模型
-│   ├── baseline_model.mat         # 基线模型
-│   └── lstm_model.mat             # LSTM模型
+├── models/                        # Trained models (auto-generated)
+│   ├── baseline_model.mat         # Baseline neural network
+│   └── lstm_model.mat             # LSTM model
 │
-├── results/                       # 结果和可视化
+├── results/                       # Training results (auto-generated)
 │   ├── baseline_confusion_matrix.png
 │   ├── lstm_confusion_matrix.png
-│   ├── model_comparison.png
+│   ├── model_comparison.fig
 │   └── training_report.txt
 │
-├── functions/                     # 辅助函数（可选）
+├── functions/                     # Auxiliary functions (optional)
 │
-├── main_train_all_models.m       # 主训练脚本
-├── extractAudioFeatures.m        # 特征提取
-├── loadRAVDESSData.m             # 数据加载
-├── trainBaselineModel.m          # 基线模型
-├── trainLSTMModel.m              # LSTM模型
-├── predictEmotion.m              # 预测功能
+├── main_train_all_models.m       # Main training pipeline
+├── extractAudioFeatures.m        # Comprehensive feature extraction
+├── extractAudioFeatures_mfcc.m   # MFCC-focused extraction
+├── extractAudioFeatures_simple.m # Simplified feature extraction
+├── loadRAVDESSData.m             # Dataset loading function
+├── trainBaselineModel.m          # Baseline NN training
+├── trainLSTMModel.m              # LSTM training
+├── predictEmotion.m              # Emotion prediction function
+├── start_training.m              # Alternative training entry point
+├── test_simple.m                 # Simple testing script
 │
-├── README.md                     # 本文件
-├── MATLAB_REPORT.md              # 完整研究报告
-└── QUICK_START_MATLAB.md         # 快速指南
+├── README.md                     # This file
+├── FINAL_RESEARCH_REPORT.md      # Complete research report
+├── QUICK_START_MATLAB.md         # Quick start guide
+└── ELEC5305_Project_Requirements.md
 ```
 
 ---
 
-## 模型架构
+## Model Architectures
 
-### 1. 基线神经网络
+### 1. Baseline Feedforward Neural Network
 
+**Architecture:**
 ```
-输入 (95维特征)
-  ↓
-全连接层 (256) + 批归一化 + ReLU + Dropout(0.3)
-  ↓
-全连接层 (128) + 批归一化 + ReLU + Dropout(0.3)
-  ↓
-全连接层 (64) + 批归一化 + ReLU + Dropout(0.3)
-  ↓
-全连接层 (8) + Softmax
-  ↓
-输出 (8个情感类别)
-```
-
-**特征**：
-- MFCCs（均值和标准差）：80维
-- 频谱特征：8维
-- 过零率：2维
-- 能量特征：2维
-- 基频特征：3维
-- **总计**：95维
-
-### 2. LSTM网络
-
-```
-输入 (40维MFCC序列)
-  ↓
-双向LSTM (128隐藏单元) + Dropout(0.3)
-  ↓
-全连接层 (64) + ReLU + Dropout(0.3)
-  ↓
-全连接层 (8) + Softmax
-  ↓
-输出 (8个情感类别)
+Input Layer (95 features)
+    ↓
+Fully Connected (256 units) + Batch Normalization + ReLU + Dropout(0.3)
+    ↓
+Fully Connected (128 units) + Batch Normalization + ReLU + Dropout(0.3)
+    ↓
+Fully Connected (64 units) + Batch Normalization + ReLU + Dropout(0.3)
+    ↓
+Fully Connected (8 units) + Softmax
+    ↓
+Output (8 emotion classes)
 ```
 
-**优势**：
-- 捕捉时序信息
-- 双向处理（前向+后向）
-- 适合情感的动态变化
+**Input Features (95 dimensions):**
+- MFCC statistics (mean & std): 80 dimensions
+- Spectral features: 8 dimensions
+- Zero-crossing rate: 2 dimensions
+- Energy features: 2 dimensions
+- Pitch features: 3 dimensions
+
+**Training Configuration:**
+- Optimizer: Adam
+- Initial Learning Rate: 0.001
+- Max Epochs: 100
+- Mini-batch Size: 32
+- Learning Rate Schedule: Piecewise decay
+
+### 2. LSTM Network
+
+**Architecture:**
+```
+Input Layer (40 MFCC coefficients × Time)
+    ↓
+Bidirectional LSTM (128 hidden units) + Dropout(0.3)
+    ↓
+Fully Connected (64 units) + ReLU + Dropout(0.3)
+    ↓
+Fully Connected (8 units) + Softmax
+    ↓
+Output (8 emotion classes)
+```
+
+**Advantages:**
+- Captures temporal dynamics of speech
+- Bidirectional processing (forward + backward)
+- Better suited for emotion's dynamic nature
+- Handles variable-length sequences
+
+**Training Configuration:**
+- Optimizer: Adam
+- Initial Learning Rate: 0.001
+- Max Epochs: 100
+- Mini-batch Size: 32
+- Sequence Padding: Shortest sequence length
 
 ---
 
-## 预期结果
+## Usage Examples
 
-基于RAVDESS数据集的预期性能：
-
-| 模型 | 准确率 | 优势 |
-|------|--------|------|
-| 基线神经网络 | 75-80% | 快速训练，简单有效 |
-| LSTM网络 | 82-88% | 捕捉时序信息 |
-| CNN-LSTM | 85-90% | 最佳性能（需更多资源）|
-
-**情感识别**：
-- 最易识别：Neutral（中性）、Angry（愤怒）
-- 较难识别：Calm（平静）vs. Sad（悲伤）
-
----
-
-## 使用示例
-
-### 示例1：训练所有模型
+### Example 1: Train All Models
 
 ```matlab
-% 确保在项目文件夹
-cd('C:\Users\朱\speech_emotion_recognition_matlab')
+% Navigate to project directory
+cd('C:\path\to\speech_emotion_recognition_matlab')
 
-% 运行主脚本
+% Run complete training pipeline
 main_train_all_models
 
-% 等待训练完成...
-% 查看results/文件夹的结果
+% Results will be saved in:
+% - models/baseline_model.mat
+% - models/lstm_model.mat
+% - results/ (all figures and reports)
 ```
 
-### 示例2：单独训练基线模型
+### Example 2: Train Only Baseline Model
 
 ```matlab
-% 加载数据
+% Load dataset
 [features, labels, emotionNames] = loadRAVDESSData('data/RAVDESS');
 
-% 训练基线模型
+% Train baseline model
 [net, accuracy, confMat] = trainBaselineModel(features, labels);
 
-% 查看准确率
-fprintf('Accuracy: %.2f%%\n', accuracy * 100);
+% Display accuracy
+fprintf('Baseline Model Accuracy: %.2f%%\n', accuracy * 100);
+
+% Save model
+save('models/baseline_model.mat', 'net', 'emotionNames');
 ```
 
-### 示例3：预测新音频
+### Example 3: Predict Emotion from New Audio File
 
 ```matlab
-% 预测情感
+% Load trained model
+load('models/baseline_model.mat', 'net', 'emotionNames');
+
+% Predict emotion for a single file
 audioFile = 'data/RAVDESS/Actor_01/03-01-05-01-01-01-01.wav';
 [emotion, probs] = predictEmotion(audioFile, 'models/baseline_model.mat');
 
-% 显示结果
-fprintf('Predicted: %s (%.2f%% confident)\n', emotion, max(probs)*100);
-```
+% Display results
+fprintf('Predicted Emotion: %s\n', emotion);
+fprintf('Confidence: %.2f%%\n', max(probs) * 100);
 
-### 示例4：批量预测
-
-```matlab
-% 获取所有音频文件
-audioFiles = dir('data/RAVDESS/Actor_01/*.wav');
-
-% 预测每个文件
-for i = 1:length(audioFiles)
-    audioPath = fullfile(audioFiles(i).folder, audioFiles(i).name);
-    [emotion, probs] = predictEmotion(audioPath);
-    fprintf('%s: %s\n', audioFiles(i).name, emotion);
+% Display all probabilities
+disp('All Emotion Probabilities:');
+for i = 1:length(emotionNames)
+    fprintf('  %s: %.2f%%\n', emotionNames{i}, probs(i) * 100);
 end
 ```
 
----
-
-## 特征提取详解
-
-### 提取的特征
-
-1. **MFCC（Mel频率倒谱系数）**
-   - 40个系数
-   - 计算均值和标准差
-   - 共80维
-
-2. **频谱特征**
-   - 频谱质心（Spectral Centroid）
-   - 频谱滚降点（Spectral Rolloff）
-   - 频谱通量（Spectral Flux）
-   - 频谱熵（Spectral Entropy）
-
-3. **时域特征**
-   - 过零率（Zero Crossing Rate）
-   - 能量（Energy）
-
-4. **基频特征**
-   - F0均值、标准差、范围
-
-### 特征提取代码
+### Example 4: Batch Prediction
 
 ```matlab
-% 读取音频
-[audio, fs] = audioread('audio.wav');
+% Get all audio files from a specific actor
+audioFiles = dir('data/RAVDESS/Actor_01/*.wav');
 
-% 提取MFCC
-mfccCoeffs = mfcc(audio, fs, 'NumCoeffs', 40);
+% Predict emotions for all files
+predictions = cell(length(audioFiles), 2);
+for i = 1:length(audioFiles)
+    audioPath = fullfile(audioFiles(i).folder, audioFiles(i).name);
+    [emotion, probs] = predictEmotion(audioPath);
+    predictions{i, 1} = audioFiles(i).name;
+    predictions{i, 2} = emotion;
+    fprintf('%s: %s (%.2f%% confidence)\n', ...
+        audioFiles(i).name, emotion, max(probs)*100);
+end
+```
 
-% 提取频谱特征
-sCentroid = spectralCentroid(audio, fs);
-sRolloff = spectralRolloffPoint(audio, fs);
+### Example 5: Compare Models
 
-% 组合特征
-features = [mean(mfccCoeffs), std(mfccCoeffs), ...
-           mean(sCentroid), mean(sRolloff), ...];
+```matlab
+% Load both models
+load('models/baseline_model.mat', 'netBaseline');
+load('models/lstm_model.mat', 'netLSTM');
+
+% Test on same data
+testFile = 'data/RAVDESS/Actor_24/03-01-07-02-02-01-24.wav';
+
+[emotionBaseline, probsBaseline] = predictEmotion(testFile, 'models/baseline_model.mat');
+[emotionLSTM, probsLSTM] = predictEmotion(testFile, 'models/lstm_model.mat');
+
+% Display comparison
+fprintf('Baseline Model: %s (%.2f%% confidence)\n', emotionBaseline, max(probsBaseline)*100);
+fprintf('LSTM Model: %s (%.2f%% confidence)\n', emotionLSTM, max(probsLSTM)*100);
 ```
 
 ---
 
-## 训练选项说明
+## Expected Results
 
-### 优化器设置
+### Performance Benchmarks
 
+Based on the RAVDESS dataset, expected model performance:
+
+| Model | Accuracy Range | Training Time | Strengths |
+|-------|----------------|---------------|-----------|
+| Baseline NN | 75-80% | 5-10 minutes | Fast training, simple implementation |
+| LSTM | 82-88% | 15-25 minutes | Captures temporal patterns, better accuracy |
+| CNN-LSTM | 85-90% | 30-45 minutes | Best performance, more complex |
+
+### Emotion Recognition Difficulty
+
+**Easiest to Recognize:**
+- Angry (high energy, distinct patterns)
+- Neutral (low variation)
+- Happy (characteristic pitch patterns)
+
+**More Challenging:**
+- Calm vs. Sad (similar low-energy characteristics)
+- Fear vs. Surprise (similar arousal levels)
+- Disgust (less represented in dataset)
+
+### Confusion Matrix Insights
+
+Common misclassifications:
+- Calm ↔ Sad (similar acoustic properties)
+- Fear ↔ Surprise (both high-arousal emotions)
+- Happy ↔ Neutral (depends on expression intensity)
+
+---
+
+## Documentation
+
+### Complete Project Documentation
+
+- **[Research Report](FINAL_RESEARCH_REPORT.md)** - Full academic report with literature review, methodology, results, and discussion
+- **[Quick Start Guide](QUICK_START_MATLAB.md)** - Condensed setup and usage instructions
+- **[Project Requirements](ELEC5305_Project_Requirements.md)** - Course requirements and marking criteria
+
+### Video Demonstration
+
+📹 **Video Link**: [To be added - Video demonstration showing code execution and results]
+
+The video demonstrates:
+- Dataset loading and preprocessing
+- Feature extraction process
+- Model training workflow
+- Performance evaluation
+- Real-time emotion prediction
+
+---
+
+## Troubleshooting
+
+### Common Issues and Solutions
+
+#### Issue 1: "Undefined function or variable 'trainNetwork'"
+
+**Cause:** Deep Learning Toolbox not installed
+
+**Solution:**
+```matlab
+% Check installed toolboxes
+ver
+
+% Install via Add-Ons:
+% Home → Add-Ons → Get Add-Ons → Search "Deep Learning Toolbox"
+```
+
+#### Issue 2: "Data path does not exist: data/RAVDESS"
+
+**Cause:** Dataset not downloaded or in wrong location
+
+**Solution:**
+1. Download RAVDESS dataset from Kaggle or Zenodo
+2. Extract to `data/RAVDESS/` directory
+3. Verify structure: `data/RAVDESS/Actor_01/`, `Actor_02/`, etc.
+
+#### Issue 3: "Out of memory"
+
+**Cause:** Insufficient RAM for batch processing
+
+**Solution:**
+```matlab
+% Reduce batch size in training options
+options = trainingOptions('adam', ...
+    'MiniBatchSize', 16, ...  % Reduce from 32 to 16
+    ...
+);
+
+% Or process dataset in smaller chunks
+```
+
+#### Issue 4: "audioread: Unable to read file"
+
+**Cause:** Corrupted audio file or unsupported format
+
+**Solution:**
+```matlab
+% Test individual file
+try
+    [audio, fs] = audioread('problem_file.wav');
+    fprintf('File OK: %d samples at %d Hz\n', length(audio), fs);
+catch ME
+    fprintf('Error: %s\n', ME.message);
+    % Skip or re-download the file
+end
+```
+
+#### Issue 5: Training is very slow
+
+**Solutions:**
+1. **Enable GPU acceleration** (if available):
+```matlab
+gpuDevice  % Check GPU availability
+% Training will automatically use GPU if detected
+```
+
+2. **Reduce epochs for testing**:
 ```matlab
 options = trainingOptions('adam', ...
-    'MaxEpochs', 100, ...              % 最大训练轮数
-    'MiniBatchSize', 32, ...           % 批次大小
-    'InitialLearnRate', 0.001, ...     % 初始学习率
-    'LearnRateSchedule', 'piecewise', ... % 学习率衰减
-    'LearnRateDropFactor', 0.5, ...    % 衰减因子
-    'LearnRateDropPeriod', 20, ...     % 衰减周期
-    'ValidationFrequency', 10, ...     % 验证频率
-    'Plots', 'training-progress', ...  % 显示训练进度
-    'ExecutionEnvironment', 'auto');   % 自动选择GPU/CPU
+    'MaxEpochs', 30, ...  % Reduce from 100 for quick testing
+    ...
+);
 ```
 
-### 使用GPU加速
-
-如果您有NVIDIA GPU：
-
+3. **Use cached features**:
 ```matlab
-% 检查GPU可用性
-gpuDevice
+% After first run, features are saved to:
+% data/extracted_features.mat
+% Subsequent runs load from cache (much faster)
+```
 
-% 训练会自动使用GPU（如果ExecutionEnvironment设为'auto'或'gpu'）
+#### Issue 6: "Index exceeds array dimensions"
+
+**Cause:** Dataset structure doesn't match expected format
+
+**Solution:**
+```matlab
+% Verify dataset structure
+dataPath = 'data/RAVDESS';
+actors = dir(fullfile(dataPath, 'Actor_*'));
+fprintf('Found %d actors\n', length(actors));
+
+% Check first actor's files
+files = dir(fullfile(dataPath, 'Actor_01', '*.wav'));
+fprintf('Actor_01 has %d audio files\n', length(files));
 ```
 
 ---
 
-## 常见问题
+## Performance Optimization
 
-### Q1: 提示工具箱缺失
-
-**错误**：`Undefined function or variable 'trainNetwork'`
-
-**解决**：
-1. 检查是否安装了Deep Learning Toolbox
-2. 在MATLAB命令窗口运行 `ver`
-3. 如未安装，前往 主页 → Add-Ons → 搜索 "Deep Learning Toolbox"
-
-### Q2: 找不到数据集
-
-**错误**：`Data path does not exist: data/RAVDESS`
-
-**解决**：
-1. 确保已下载RAVDESS数据集
-2. 检查文件夹路径是否正确
-3. 修改 `main_train_all_models.m` 中的 `dataPath` 变量
-
-### Q3: 内存不足
-
-**错误**：`Out of memory`
-
-**解决**：
-1. 减小 `MiniBatchSize`（从32改为16或8）
-2. 关闭其他应用程序
-3. 分批处理数据
-4. 使用GPU（如果可用）
-
-### Q4: 训练太慢
-
-**解决**：
-1. 确保使用GPU（`gpuDevice`）
-2. 减少 `MaxEpochs`（测试时用20-30）
-3. 减小批次大小
-4. 使用并行计算工具箱
-
-### Q5: 无法提取特征
-
-**错误**：特征提取失败
-
-**解决**：
-1. 确保音频文件是.wav格式
-2. 检查Audio Toolbox是否已安装
-3. 确保音频文件未损坏
-4. 尝试用 `audioread('file.wav')` 手动读取测试
-
----
-
-## 性能优化建议
-
-### 1. 使用GPU加速
+### Using GPU Acceleration
 
 ```matlab
-% 检查GPU
+% Check GPU availability
 gpuDevice
 
-% 将数据移到GPU
-XTrain_gpu = gpuArray(XTrain);
-YTrain_gpu = gpuArray(YTrain);
+% Training automatically uses GPU when available
+% To explicitly control:
+options = trainingOptions('adam', ...
+    'ExecutionEnvironment', 'gpu', ...  % Force GPU
+    % 'ExecutionEnvironment', 'cpu', ...  % Force CPU
+    % 'ExecutionEnvironment', 'auto', ... % Automatic (default)
+    ...
+);
 ```
 
-### 2. 保存提取的特征
+### Parallel Processing
 
 ```matlab
-% 第一次运行后，特征已保存
-% 后续可直接加载
-load('data/extracted_features.mat');
-```
+% Enable parallel pool for faster data loading
+parpool;  % Start parallel pool
 
-### 3. 并行处理
-
-```matlab
-% 启用并行池
-parpool;
-
-% 使用parfor加速数据加载
-parfor i = 1:length(audioFiles)
+% Use parfor for batch processing
+parfor i = 1:numFiles
     features{i} = extractAudioFeatures(audioFiles{i});
 end
 ```
 
----
-
-## 结果分析
-
-### 查看训练进度
-
-训练时会自动显示：
-- 训练损失和准确率曲线
-- 验证损失和准确率曲线
-- 实时更新的图表
-
-### 混淆矩阵分析
+### Caching Extracted Features
 
 ```matlab
-% 加载结果
-load('results/all_results.mat');
+% First run: extracts and saves features
+% File: data/extracted_features.mat
 
-% 查看混淆矩阵
-figure;
-confusionchart(confMatBaseline);
-title('Baseline Model Confusion Matrix');
-```
-
-### 错误分析
-
-```matlab
-% 找出分类错误的样本
-incorrectIdx = find(YPred ~= YTest);
-fprintf('Misclassified samples: %d\n', length(incorrectIdx));
-
-% 查看具体错误
-for i = 1:min(10, length(incorrectIdx))
-    idx = incorrectIdx(i);
-    fprintf('Sample %d: True=%s, Predicted=%s\n', ...
-        idx, char(YTest(idx)), char(YPred(idx)));
+% Subsequent runs: loads from cache
+if exist('data/extracted_features.mat', 'file')
+    load('data/extracted_features.mat');
+    fprintf('Loaded cached features\n');
+else
+    % Extract features (slow)
+    features = extractFeaturesFromDataset();
+    save('data/extracted_features.mat', 'features', 'labels');
 end
 ```
 
 ---
 
-## 扩展和改进
+## References
 
-### 1. 数据增强
+### Dataset
+- Livingstone SR, Russo FA (2018). "The Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS)." *PLoS ONE* 13(5): e0196391. https://doi.org/10.1371/journal.pone.0196391
 
-```matlab
-% 添加噪声
-noisyAudio = audio + 0.005 * randn(size(audio));
-
-% 音高变换
-pitchShiftedAudio = shiftPitch(audio, fs, 2); % 升高2个半音
-
-% 时间拉伸
-stretchedAudio = timeStretch(audio, 1.1); % 拉伸10%
-```
-
-### 2. 集成学习
-
-```matlab
-% 训练多个模型
-net1 = trainBaselineModel(features, labels);
-net2 = trainLSTMModel(dataPath);
-
-% 投票集成
-predBaseline = classify(net1, XTest);
-predLSTM = classify(net2, XTestSeq);
-
-% 组合预测（简单投票）
-finalPred = mode([predBaseline, predLSTM], 2);
-```
-
-### 3. 超参数调优
-
-```matlab
-% 学习率搜索
-learningRates = [0.0001, 0.0005, 0.001, 0.005];
-for lr = learningRates
-    options = trainingOptions('adam', 'InitialLearnRate', lr, ...);
-    net = trainNetwork(XTrain, YTrain, layers, options);
-    accuracy = evaluateModel(net, XTest, YTest);
-    fprintf('LR=%.4f, Accuracy=%.2f%%\n', lr, accuracy*100);
-end
-```
-
----
-
-## 项目提交清单
-
-### 必需文件
-
-- [x] 所有MATLAB代码文件（.m文件）
-- [x] README.md（本文件）
-- [x] 研究报告（MATLAB_REPORT.md）
-- [x] 训练结果（results/文件夹）
-- [x] GitHub仓库链接
-
-### 可选文件
-
-- [ ] 训练好的模型（models/文件夹，可能太大）
-- [ ] 演示视频
-- [ ] 示例音频文件
-
----
-
-## 参考资源
-
-### MATLAB文档
-
+### MATLAB Documentation
 - [Deep Learning Toolbox](https://www.mathworks.com/help/deeplearning/)
 - [Audio Toolbox](https://www.mathworks.com/help/audio/)
 - [Train Network for Speech Command Recognition](https://www.mathworks.com/help/audio/ug/speech-command-recognition-using-deep-learning.html)
 
-### 数据集
-
-- [RAVDESS on Kaggle](https://www.kaggle.com/datasets/uwrfkaggle/ravdess-emotional-speech-audio)
-- [RAVDESS Official](https://zenodo.org/record/1188976)
-
-### 相关论文
-
-- Livingstone SR, Russo FA (2018) The RAVDESS Database. PLoS ONE 13(5)
-- MATLAB示例：Speech Emotion Recognition
+### Related Research
+- Badshah AM et al. (2017). "Deep features-based speech emotion recognition for smart affective services." *Multimedia Tools and Applications*.
+- Zhao J et al. (2019). "Speech emotion recognition using deep 1D & 2D CNN LSTM networks." *Biomedical Signal Processing and Control*.
 
 ---
 
-## 联系方式
+## License
 
-- **课程**：Speech and Audio Processing
-- **学校**：University of Sydney
-- **GitHub**：[您的GitHub链接]
+This project is developed for educational purposes as part of ELEC5305 coursework at the University of Sydney.
+
+**Dataset License:** The RAVDESS dataset is licensed under CC BY-NA-SA 4.0.
 
 ---
 
-## 许可
+## Acknowledgments
 
-本项目用于教育目的，基于MATLAB和RAVDESS数据集。
+- **Course Instructor:** ELEC5305 Teaching Team, University of Sydney
+- **Dataset:** RAVDESS creators (Livingstone & Russo, 2018)
+- **Tools:** MathWorks MATLAB and Deep Learning Toolbox
 
-**祝您项目顺利！Good Luck!** 🎉
+---
+
+## Contact
+
+**Student:** Zhu
+**GitHub:** https://github.com/zzhu0143/speech-emotion-recognition-matlab
+**Course:** ELEC5305 - Speech and Audio Processing
+**Institution:** The University of Sydney
+
+For questions or issues, please open an issue on GitHub or contact through university email.
+
+---
+
+**Last Updated:** November 2025
+**Version:** 1.0
+**Status:** Completed and tested on MATLAB R2022a
