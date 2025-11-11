@@ -47,7 +47,7 @@ The repository contains:
 
 ### 3. 📹 Video Demonstration
 
-**Video Link:** [To be added after recording]
+**Video Link:** [Watch Demo Video](https://youtu.be/w3PVsGf7R54)
 
 **Content:**
 - Project overview and objectives
@@ -304,8 +304,8 @@ Before final submission, verify:
 - [x] README.md is complete and in English
 - [x] All code files are committed
 - [x] .gitignore properly excludes large files
-- [ ] Video is recorded and uploaded
-- [ ] Video link added to README and this file
+- [x] Video is recorded and uploaded
+- [x] Video link added to README and this file
 - [ ] Written report uploaded to Canvas
 - [ ] Written report includes GitHub link
 - [ ] All three components reference each other

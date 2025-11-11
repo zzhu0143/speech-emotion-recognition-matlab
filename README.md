@@ -434,7 +434,7 @@ Common misclassifications:
 
 ### Video Demonstration
 
-📹 **Video Link**: [To be added - Video demonstration showing code execution and results]
+📹 **Video Link**: [Watch Demo Video](https://youtu.be/w3PVsGf7R54)
 
 The video demonstrates:
 - Dataset loading and preprocessing

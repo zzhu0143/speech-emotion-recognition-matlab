@@ -69,8 +69,17 @@ function [predictedEmotion, probabilities] = predictEmotion(audioFile, modelPath
             audioSignal = resample(audioSignal, 16000, fs);
         end
 
-        mfccSeq = mfcc(audioSignal, 16000, 'NumCoeffs', 40);
-        features = {mfccSeq'};
+        try
+            mfccSeq = mfcc(audioSignal, 16000, 'NumCoeffs', 40);
+            % mfccSeq is typically: [numFrames x numCoeffs]
+            % For LSTM, we need: [numCoeffs x numFrames]
+            fprintf('  MFCC sequence size: %d x %d\n', size(mfccSeq, 1), size(mfccSeq, 2));
+            features = {mfccSeq'};  % Transpose to [numCoeffs x numFrames]
+            fprintf('  Transposed to: %d x %d\n', size(features{1}, 1), size(features{1}, 2));
+        catch ME
+            fprintf('  Error extracting MFCC for LSTM: %s\n', ME.message);
+            error('Failed to extract MFCC features for LSTM model');
+        end
 
         [predictedLabel, scores] = classify(net, features);
     else
@@ -78,15 +87,19 @@ function [predictedEmotion, probabilities] = predictEmotion(audioFile, modelPath
         [predictedLabel, scores] = classify(net, features);
     end
 
-    predictedEmotion = char(predictedLabel);
+    % Get probabilities
     probabilities = double(scores);
+
+    % Find the emotion with highest probability (this is the actual prediction)
+    [maxProb, maxIdx] = max(probabilities);
+    predictedEmotion = emotionNames{maxIdx};
 
     % Display results
     fprintf('\n========================================\n');
     fprintf('Prediction Results\n');
     fprintf('========================================\n');
     fprintf('Predicted Emotion: %s\n', upper(predictedEmotion));
-    fprintf('Confidence: %.2f%%\n\n', max(probabilities) * 100);
+    fprintf('Confidence: %.2f%%\n\n', maxProb * 100);
 
     fprintf('Probability Distribution:\n');
     fprintf('-------------------------\n');
